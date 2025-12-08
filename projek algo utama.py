@@ -3,9 +3,10 @@ import pandas as pd
 from tabulate import tabulate
 from datetime import datetime   
 import logo
+
 def connectDB():
     try:
-        conn = psycopg2.connect(host="localhost", user ="postgres", password="rosa123", dbname="proyek akhir")
+        conn = psycopg2.connect(host="localhost", user ="postgres", password="riz27", dbname="Proyek Akhir")
         cur = conn.cursor()
         print("Database connected successfully")
         return conn, cur
@@ -1478,5 +1479,6 @@ def lihat_riwayat_transaksi():
 
     cur.close()
     conn.close()
+
 
 main()
