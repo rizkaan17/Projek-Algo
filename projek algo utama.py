@@ -70,7 +70,6 @@ def confirm(prompt="Yakin? (y/n): "):
             return False
         print("Ketik 'y' atau 'n'.")
 
-# ----------------- Database -----------------
 def connectDB():
     """
     Tetap menggunakan connectDB() sesuai permintaan.
@@ -85,8 +84,7 @@ def connectDB():
         print(Fore.RED + "Failed to connect to database" + Style.RESET_ALL)
         print(Fore.YELLOW + "Error detail:", e, Style.RESET_ALL)
         return None, None
-    
-# ----------------- Program utama & menu -----------------
+
 def main():
     while True:
         clear_screen()
@@ -110,7 +108,6 @@ def main():
             print(Fore.MAGENTA + "Program selesai. Terima kasih!" + Style.RESET_ALL)
             break
 
-# ----------------- Menu Awal -----------------
 def registerasi():
     clear_screen()
     banner()
@@ -129,7 +126,6 @@ def registerasi():
     if not conn:
         prompt_enter(); return
     try:
-        # cek username unik
         cur.execute("SELECT 1 FROM pelanggan WHERE username_pelanggan = %s", (username_pelanggan,))
         if cur.fetchone():
             print(Fore.RED + "Username sudah dipakai. Pilih yang lain." + Style.RESET_ALL)
@@ -282,7 +278,6 @@ def login_pelanggan():
             pass
     prompt_enter()
 
-# ----------------- Admin Produksi (menu & fungsi) -----------------
 def halaman_menu_admin_produksi():
     while True:
         clear_screen()
@@ -310,7 +305,6 @@ def halaman_menu_admin_produksi():
                 print("Logout...")
                 spinner(0.4)
                 return
-
         prompt_enter()
 
 def biodata():
@@ -336,12 +330,11 @@ def biodata():
             return
         else:
             print(Fore.RED + "Pilihan tidak valid, coba lagi." + Style.RESET_ALL)
-
         prompt_enter()
 
 def edit_bio_karyawan():
     clear_screen()
-    print("=== Edit Biodata ===")
+    print(Fore.CYAN + "=== Edit Biodata ===" + Style.RESET_ALL)
     conn, cur = connectDB()
     if not conn:
         prompt_enter()
@@ -387,7 +380,7 @@ def edit_bio_karyawan():
 
 def lihat_biodata_karyawan():
     clear_screen()
-    print("=== Lihat Biodata ===")
+    print(Fore.CYAN + "=== Lihat Biodata ===" + Style.RESET_ALL)
     conn, cur = connectDB()
     if not conn:
         prompt_enter(); return
@@ -449,15 +442,13 @@ def hasil_panen():
             return
         else:
             print(Fore.RED + "Pilihan tidak valid, coba lagi." + Style.RESET_ALL)
-
         prompt_enter()
 
 def input_hp():
     clear_screen()
     lihat_laporan_hp()
-    print("=== Input Hasil Panen ===")
+    print(Fore.CYAN + "=== Input Hasil Panen ===" + Style.RESET_ALL)
 
-    # Input jumlah panen
     hasil_panen_in = input("Masukkan jumlah hasil panen (kg) [Enter untuk batal]: ")
     if hasil_panen_in.strip() == "":
         print(Fore.YELLOW + "Dibatalkan, kembali ke menu utama." + Style.RESET_ALL)
@@ -468,20 +459,17 @@ def input_hp():
         print(Fore.RED + "Input harus angka." + Style.RESET_ALL)
         prompt_enter()
         return
-    
-    # Input tanggal panen
+
     tanggal_panen = input("Masukkan tanggal panen (YYYY-MM-DD) [Enter untuk batal]: ")
     if tanggal_panen.strip() == "":
         print(Fore.YELLOW + "Dibatalkan, kembali ke menu utama." + Style.RESET_ALL)
         return
 
-    # Input nama karyawan
     nama_karyawan = input("Masukkan nama karyawan [Enter untuk batal]: ").strip().lower()
     if nama_karyawan == "":
         print(Fore.YELLOW + "Dibatalkan, kembali ke menu utama." + Style.RESET_ALL)
         return
 
-   # Tampilkan ringkasan data sebelum simpan
     print("\n--- Konfirmasi Data ---")
     print(f"Jumlah Panen : {hasil_panen} kg")
     print(f"Tanggal Panen: {tanggal_panen}")
@@ -497,7 +485,6 @@ def input_hp():
         return
 
     try:
-        # Cari id_karyawan berdasarkan nama
         cur.execute("SELECT id_karyawan FROM karyawan WHERE nama_karyawan = %s", (nama_karyawan,))
         result = cur.fetchone()
 
@@ -530,7 +517,7 @@ def input_hp():
 def hapus_hp():
     clear_screen()
     lihat_laporan_hp()
-    print("=== Hapus Hasil Panen ===")
+    print(Fore.CYAN + "=== Hapus Hasil Panen ===" + Style.RESET_ALL)
     lihat_laporan_hp()
     id_hp = safe_int("Masukkan ID hasil panen yang akan dihapus: ", default=None)
     if not confirm("Yakin ingin menghapus hasil panen ini? (y/n): "):
@@ -556,10 +543,9 @@ def hapus_hp():
 def edit_hp():
     clear_screen()
     lihat_laporan_hp()  
-    print("=== Edit Hasil Panen ===")
+    print(Fore.CYAN + "=== Edit Hasil Panen ===" + Style.RESET_ALL)
     lihat_laporan_hp()
 
-    # Input ID hasil panen
     id_hp_in = input("Masukkan ID hasil panen yang akan diedit [Enter untuk batal]: ")
     if id_hp_in.strip() == "":
         print(Fore.YELLOW + "Dibatalkan, kembali ke menu utama." + Style.RESET_ALL)
@@ -590,7 +576,6 @@ def edit_hp():
                 print(Fore.YELLOW + "Edit dibatalkan, kembali ke menu utama." + Style.RESET_ALL)
                 return
 
-            # Cari id_karyawan berdasarkan nama
             cur.execute("SELECT id_karyawan FROM karyawan WHERE LOWER(nama_karyawan) = LOWER(%s)", (nama_karyawan,))
             result_karyawan = cur.fetchone()
 
@@ -601,7 +586,6 @@ def edit_hp():
 
             id_karyawan = result_karyawan[0]
 
-            # Konfirmasi sebelum update
             print("\n--- Konfirmasi Data ---")
             print(f"Tanggal Panen : {tgl_panen_baru}")
             print(f"Jumlah Panen  : {jmlh_panen_baru}")
@@ -634,7 +618,7 @@ def edit_hp():
 
 def lihat_laporan_hp():
     clear_screen()
-    print("=== Laporan Hasil Panen ===")
+    print(Fore.CYAN + "=== Laporan Hasil Panen ===" + Style.RESET_ALL)
     conn, cur = connectDB()
     if not conn:
         prompt_enter(); return
@@ -689,13 +673,12 @@ def produksi():
             return
         else:
             print(Fore.RED + "Pilihan tidak valid, coba lagi." + Style.RESET_ALL)
-
         prompt_enter()
 
 def input_produksi():
     clear_screen()
     lihat_laporan_hp()
-    print("=== Input Produksi ===")
+    print(Fore.CYAN + "=== Input Produksi ===" + Style.RESET_ALL)
 
     tanggal_produksi = input("Masukkan tanggal produksi (YYYY-MM-DD) [Enter untuk batal]: ")
     if tanggal_produksi.strip() == "":
@@ -794,10 +777,9 @@ def input_produksi():
         except:
             pass
 
-
 def lihat_laporan_produksi():
     clear_screen()
-    print("=== Laporan Produksi ===")
+    print(Fore.CYAN + "=== Laporan Produksi ===" + Style.RESET_ALL)
     conn, cur = connectDB()
     if not conn:
         prompt_enter(); return
@@ -829,7 +811,7 @@ def lihat_laporan_produksi():
 def edit_produksi():
     clear_screen()
     lihat_laporan_produksi()
-    print("=== Edit Produksi ===")
+    print(Fore.CYAN + "=== Edit Produksi ===" + Style.RESET_ALL)
 
     id_produksi_in = input("Masukkan ID produksi yang akan diedit [Enter untuk batal]: ")
     if id_produksi_in.strip() == "":
@@ -931,7 +913,7 @@ def edit_produksi():
 def hapus_produksi():
     clear_screen()
     lihat_laporan_produksi()
-    print("=== Hapus Produksi ===")
+    print(Fore.CYAN + "=== Hapus Produksi ===" + Style.RESET_ALL)
     id_produksi = safe_int("Masukkan ID produksi yang akan dihapus: ", default=None)
     if not confirm("Yakin menghapus produksi ini? (y/n): "):
         print("Batal penghapusan."); prompt_enter(); return
@@ -981,7 +963,6 @@ def halaman_menu_admin_gudang():
                 return
         else:
             print(Fore.RED + "Pilihan tidak valid, coba lagi." + Style.RESET_ALL)
-
         prompt_enter()
 
 def produk():
@@ -1019,10 +1000,9 @@ def produk():
 def input_produk():
     clear_screen()
     lihat_laporan_produksi()
-    print("=== Input Produk ===")
+    print(Fore.CYAN + "=== Input Produk ===" + Style.RESET_ALL)
     jumlah_dibutuhkan = safe_int("Masukkan jumlah stok: ", default=None)
-    id_jenis_produk = safe_int("Masukkan id jenis (1.Fresh, 2.Frozen, 3.Jus): ",
-                               default=None, allowed=[1, 2, 3])
+    id_jenis_produk = safe_int("Masukkan id jenis (1.Fresh, 2.Frozen, 3.Jus): ", default=None, allowed=[1, 2, 3])
 
     conn, cur = connectDB()
     if not conn:
@@ -1030,7 +1010,6 @@ def input_produk():
         return
 
     try:
-        # Ambil produksi yang masih ada stok
         query = """
             SELECT id_produksi, jmlh_produksi
             FROM produksi
@@ -1044,7 +1023,6 @@ def input_produk():
         total_diambil = 0
         id_produksi_terpakai = []
 
-        # Kurangi stok produksi sesuai kebutuhan
         for id_produksi, jmlh_produksi in produksis:
             if sisa <= 0:
                 break
@@ -1067,7 +1045,6 @@ def input_produk():
                 id_produksi_terpakai.append(id_produksi)
                 sisa -= jmlh_produksi
 
-        # Jika stok cukup, masukkan ke tabel produk
         if sisa == 0:
             cur.execute("""
                 INSERT INTO produk (stok, id_jenis_produk, tgl_update_stok)
@@ -1078,7 +1055,6 @@ def input_produk():
             lihat_laporan_produk()
         else:
             print(Fore.YELLOW + "Stok habis! Tidak bisa memenuhi semua permintaan." + Style.RESET_ALL)
-
         conn.commit()
 
     except Exception as e:
@@ -1093,7 +1069,7 @@ def input_produk():
 
 def lihat_laporan_produk():
     clear_screen()
-    print("=== Laporan Produk ===")
+    print(Fore.CYAN + "=== Laporan Produk ===" + Style.RESET_ALL)
     conn, cur = connectDB()
     if not conn:
         prompt_enter(); return
@@ -1122,7 +1098,7 @@ def lihat_laporan_produk():
 def edit_produk():
     clear_screen()
     lihat_laporan_produk()
-    print("=== Edit Produk ===")
+    print(Fore.CYAN + "=== Edit Produk ===" + Style.RESET_ALL)
     conn, cur = connectDB()
     if not conn:
         prompt_enter(); return
@@ -1141,7 +1117,7 @@ def edit_produk():
             if stok_baru.strip() == "":
                 print(Fore.YELLOW + "Tidak ada perubahan stok." + Style.RESET_ALL)
             else:
-                stok_baru = int(stok_baru)  # pastikan integer
+                stok_baru = int(stok_baru) 
                 update_query = """
                     UPDATE produk
                     SET stok = %s, tgl_update_stok = %s
@@ -1165,7 +1141,7 @@ def edit_produk():
 def hapus_produk():
     clear_screen()
     lihat_laporan_produk()
-    print("=== Hapus Produk ===")
+    print(Fore.CYAN + "=== Hapus Produk ===" + Style.RESET_ALL)
     id_produk = safe_int("Masukkan ID produk yang akan dihapus: ", default=None)
     if not confirm("Yakin menghapus produk ini? (y/n): "):
         print("Batal menghapus."); prompt_enter(); return
@@ -1207,13 +1183,12 @@ def transaksi():
             return  
         else:
             print(Fore.RED + "Pilihan tidak valid, coba lagi." + Style.RESET_ALL)
-
         prompt_enter()
 
 def update_status_transaksi():
     clear_screen()
     lihat_laporan_transaksi()
-    print("=== Input Status Transaksi ===")
+    print(Fore.CYAN + "=== Input Status Transaksi ===" + Style.RESET_ALL)
     conn, cur = connectDB()
     if not conn:
         prompt_enter()
@@ -1241,7 +1216,7 @@ def update_status_transaksi():
 
 def lihat_laporan_transaksi():
     clear_screen()
-    print("=== Laporan Transaksi ===")
+    print(Fore.CYAN + "=== Laporan Transaksi ===" + Style.RESET_ALL)
     conn, cur = connectDB()
     if not conn:
         prompt_enter() 
@@ -1332,12 +1307,11 @@ def kelola_akun_karyawan():
             return
         else:
             print(Fore.RED + "Pilihan tidak valid, coba lagi." + Style.RESET_ALL)
-
         prompt_enter()
 
 def tambah_karyawan():
     clear_screen()
-    print("=== Tambah Karyawan ===")
+    print(Fore.CYAN + "=== Tambah Karyawan ===" + Style.RESET_ALL)
 
     nama = input("Nama [Enter untuk batal]: ")
     if nama.strip() == "":
@@ -1446,52 +1420,183 @@ def tambah_karyawan():
             pass
 
 def edit_karyawan():
+    clear_screen()
+    print("=== Edit Karyawan ===")
+
+    username_in = input("Masukkan Username Karyawan [Enter untuk batal]: ")
+    if username_in.strip() == "":
+        print(Fore.YELLOW + "Edit dibatalkan, kembali ke menu utama." + Style.RESET_ALL)
+        return
+
     conn, cur = connectDB()
-    if not conn: return
-    id_karyawan = input("Masukkan ID Karyawan: ")
-    cur.execute("SELECT * FROM karyawan WHERE id_karyawan = %s", (id_karyawan,))
-    result = cur.fetchone()
-    if result:
-        print("Isi data baru (isi kembali jika tidak ingin mengubah):")
-        nama_baru = input(f"Nama ({result[1]}): ") or result[1]
-        username_baru = input(f"Username ({result[2]}): ") or result[2]
-        sandi_baru = input(f"Password ({result[3]}): ") or result[3]
-        gender_baru = int(input(f"Gender ({result[4]}) (1. Perempuan / 0. Laki-laki): "))
-        gender = True if gender_baru == 1 else False
-        status_baru = int(input(f"Status ({result[8]}) (1. Aktif / 0. Nonaktif): "))
-        status = True if status_baru == 1 else False
-        gaji_baru = int(input(f"Gaji ({result[9]}): ")) or result[9]
-        jabatan_baru = input(f"ID Jabatan ({result[10]}) (2. Admin Produksi/ 3. Admin Gudang): ") or result[10]
+    if not conn: 
+        prompt_enter()
+        return
 
-        cur.execute("""
-    UPDATE karyawan
-    SET nama_karyawan = %s, username_karyawan = %s, kata_sandi_karyawan = %s, gender = %s, status_karyawan = %s,
-        gaji_karyawan = %s, id_jabatan = %s
-    WHERE id_karyawan = %s
-    """, (nama_baru, username_baru, sandi_baru, gender, status, gaji_baru, jabatan_baru, id_karyawan))
+    try:
+        cur.execute("SELECT * FROM karyawan WHERE LOWER(username_karyawan) = LOWER(%s)", (username_in,))
+        result = cur.fetchone()
 
-        conn.commit()
-        print("Data karyawan berhasil diperbarui.")
-        lihat_karyawan()
-    else:
-        print("Karyawan tidak ditemukan.")
-    cur.close(); conn.close()
+        if result:
+            print("Isi data baru (Enter untuk tidak mengubah):")
 
-def hapus_karyawan():
+            nama_baru = input(f"Nama ({result[1]}): ") or result[1]
+            username_baru = input(f"Username ({result[2]}): ") or result[2]
+            sandi_baru = input(f"Password ({result[3]}): ") or result[3]
+
+            gender_in = input(f"Gender ({result[4]}) (1. Perempuan / 0. Laki-laki): ")
+            if gender_in.strip() == "":
+                gender = result[4]
+            else:
+                try:
+                    gender_baru = int(gender_in)
+                    gender = True if gender_baru == 1 else False
+                except ValueError:
+                    print(Fore.RED + "Gender harus angka 1 atau 0." + Style.RESET_ALL)
+                    return
+
+            status_in = input(f"Status ({result[8]}) (1. Aktif / 0. Nonaktif): ")
+            if status_in.strip() == "":
+                status = result[8]
+            else:
+                try:
+                    status_baru = int(status_in)
+                    status = True if status_baru == 1 else False
+                except ValueError:
+                    print(Fore.RED + "Status harus angka 1 atau 0." + Style.RESET_ALL)
+                    return
+
+            gaji_in = input(f"Gaji ({result[9]}): ")
+            gaji_baru = int(gaji_in) if gaji_in.strip() != "" else result[9]
+
+            jabatan_baru = input(f"ID Jabatan ({result[10]}) (2. Admin Produksi / 3. Admin Gudang): ") or result[10]
+
+            print("\n--- Konfirmasi Data ---")
+            print(f"Nama     : {nama_baru}")
+            print(f"Username : {username_baru}")
+            print(f"Password : {sandi_baru}")
+            print(f"Gender   : {'Perempuan' if gender else 'Laki-laki'}")
+            print(f"Status   : {'Aktif' if status else 'Nonaktif'}")
+            print(f"Gaji     : {gaji_baru}")
+            print(f"Jabatan  : {jabatan_baru}")
+            konfirmasi = input("Apakah data sudah benar? (y/n): ").strip().lower()
+            if konfirmasi != "y":
+                print(Fore.YELLOW + "Edit dibatalkan." + Style.RESET_ALL)
+                return
+
+            cur.execute("""
+                UPDATE karyawan
+                SET nama_karyawan=%s, username_karyawan=%s, kata_sandi_karyawan=%s, gender=%s, status_karyawan=%s,
+                    gaji_karyawan=%s, id_jabatan=%s
+                WHERE LOWER(username_karyawan) = LOWER(%s)
+            """, (nama_baru, username_baru, sandi_baru, gender, status, gaji_baru, jabatan_baru, username_in))
+
+            conn.commit()
+            print(Fore.GREEN + "Data karyawan berhasil diperbarui." + Style.RESET_ALL)
+        else:
+            print(Fore.YELLOW + "Karyawan tidak ditemukan." + Style.RESET_ALL)
+
+    except Exception as e:
+        print(Fore.RED + "Gagal edit karyawan:", e, Style.RESET_ALL)
+        conn.rollback()
+    finally:
+        try:
+            cur.close()
+            conn.close()
+        except:
+            pass
+
+def edit_karyawan():
+    clear_screen()
+    print(Fore.CYAN + "=== Edit Karyawan ===" + Style.RESET_ALL)
+
+    username_in = input("Masukkan Username Karyawan [Enter untuk batal]: ")
+    if username_in.strip() == "":
+        print(Fore.YELLOW + "Edit dibatalkan, kembali ke menu utama." + Style.RESET_ALL)
+        return
+
     conn, cur = connectDB()
-    if not conn: return
-    id_karyawan = input("Masukkan ID Karyawan: ")
-    cur.execute("DELETE FROM karyawan WHERE id_karyawan = %s", (id_karyawan,))
-    conn.commit()
-    if cur.rowcount > 0:
-        print("Karyawan berhasil dihapus.")
-    else:
-        print("Karyawan tidak ditemukan.")
-    cur.close(); conn.close()
+    if not conn: 
+        prompt_enter()
+        return
+
+    try:
+        cur.execute("SELECT * FROM karyawan WHERE LOWER(username_karyawan) = LOWER(%s)", (username_in,))
+        result = cur.fetchone()
+
+        if result:
+            print("Isi data baru (Enter untuk tidak mengubah):")
+
+            nama_baru = input(f"Nama ({result[1]}): ") or result[1]
+            username_baru = input(f"Username ({result[2]}): ") or result[2]
+            sandi_baru = input(f"Password ({result[3]}): ") or result[3]
+
+            gender_in = input(f"Gender ({result[4]}) (1. Perempuan / 0. Laki-laki): ")
+            if gender_in.strip() == "":
+                gender = result[4]
+            else:
+                try:
+                    gender_baru = int(gender_in)
+                    gender = True if gender_baru == 1 else False
+                except ValueError:
+                    print(Fore.RED + "Gender harus angka 1 atau 0." + Style.RESET_ALL)
+                    return
+
+            status_in = input(f"Status ({result[8]}) (1. Aktif / 0. Nonaktif): ")
+            if status_in.strip() == "":
+                status = result[8]
+            else:
+                try:
+                    status_baru = int(status_in)
+                    status = True if status_baru == 1 else False
+                except ValueError:
+                    print(Fore.RED + "Status harus angka 1 atau 0." + Style.RESET_ALL)
+                    return
+
+            gaji_in = input(f"Gaji ({result[9]}): ")
+            gaji_baru = int(gaji_in) if gaji_in.strip() != "" else result[9]
+
+            jabatan_baru = input(f"ID Jabatan ({result[10]}) (2. Admin Produksi / 3. Admin Gudang): ") or result[10]
+
+            print("\n--- Konfirmasi Data ---")
+            print(f"Nama     : {nama_baru}")
+            print(f"Username : {username_baru}")
+            print(f"Password : {sandi_baru}")
+            print(f"Gender   : {'Perempuan' if gender else 'Laki-laki'}")
+            print(f"Status   : {'Aktif' if status else 'Nonaktif'}")
+            print(f"Gaji     : {gaji_baru}")
+            print(f"Jabatan  : {jabatan_baru}")
+            konfirmasi = input("Apakah data sudah benar? (y/n): ").strip().lower()
+            if konfirmasi != "y":
+                print(Fore.YELLOW + "Edit dibatalkan." + Style.RESET_ALL)
+                return
+
+            cur.execute("""
+                UPDATE karyawan
+                SET nama_karyawan=%s, username_karyawan=%s, kata_sandi_karyawan=%s, gender=%s, status_karyawan=%s,
+                    gaji_karyawan=%s, id_jabatan=%s
+                WHERE LOWER(username_karyawan) = LOWER(%s)
+            """, (nama_baru, username_baru, sandi_baru, gender, status, gaji_baru, jabatan_baru, username_in))
+
+            conn.commit()
+            print(Fore.GREEN + "Data karyawan berhasil diperbarui." + Style.RESET_ALL)
+        else:
+            print(Fore.YELLOW + "Karyawan tidak ditemukan." + Style.RESET_ALL)
+
+    except Exception as e:
+        print(Fore.RED + "Gagal edit karyawan:", e, Style.RESET_ALL)
+        conn.rollback()
+    finally:
+        try:
+            cur.close()
+            conn.close()
+        except:
+            pass
 
 def hapus_karyawan():
     clear_screen()
-    print("=== Hapus Karyawan ===")
+    lihat_karyawan()
+    print(Fore.CYAN + "=== Hapus Karyawan ===" + Style.RESET_ALL)
 
     id_karyawan_in = input("Masukkan ID Karyawan [Enter untuk batal]: ")
     if id_karyawan_in.strip() == "":
@@ -1540,7 +1645,7 @@ def hapus_karyawan():
 
 def lihat_karyawan():
     clear_screen()
-    print("=== Lihat Data Karyawan ===")
+    print(Fore.CYAN + "=== Lihat Data Karyawan ===" + Style.RESET_ALL)
 
     conn, cur = connectDB()
     if not conn:
@@ -1571,7 +1676,6 @@ def lihat_karyawan():
             conn.close()
         except:
             pass
-
     prompt_enter()
 
 def kelola_transaksi_pelanggan():
@@ -1595,12 +1699,11 @@ def kelola_transaksi_pelanggan():
             return
         else:
             print(Fore.RED + "Pilihan tidak valid, coba lagi." + Style.RESET_ALL) 
-
         prompt_enter()
 
 def lihat_riwayat_transaksi():
     clear_screen()
-    print("=== Lihat Riwayat Transaksi ===")
+    print(Fore.CYAN + "=== Lihat Riwayat Transaksi ===" + Style.RESET_ALL)
 
     conn, cur = connectDB()
     if not conn:
@@ -1642,12 +1745,11 @@ def lihat_riwayat_transaksi():
             conn.close()
         except:
             pass
-
     prompt_enter()
 
 def lihat_transaksi():
     clear_screen()
-    print("=== Lihat Transaksi ===")
+    print(Fore.CYAN + "=== Lihat Transaksi ===" + Style.RESET_ALL)
 
     conn, cur = connectDB()
     if not conn:
@@ -1684,12 +1786,11 @@ def lihat_transaksi():
             conn.close()
         except:
             pass
-
     prompt_enter()
 
 def ganti_mgr_baru():
     clear_screen()
-    print("=== Ganti Manager Baru ===")
+    print(Fore.CYAN + "=== Ganti Manager Baru ===" + Style.RESET_ALL)
 
     conn, cur = connectDB()
     if not conn:
@@ -1796,7 +1897,6 @@ def halaman_menu_pelanggan(id_pelanggan):
             break
         else:
             print(Fore.RED + "Pilihan tidak valid!" + Style.RESET_ALL)
-
         prompt_enter()
 
 def belanja_produk(id_pelanggan):
@@ -1886,10 +1986,10 @@ def lihat_biodata(id_pelanggan):
 
         if data:
             print(Fore.GREEN + "=== BIODATA ===" + Style.RESET_ALL)
-            if data[4]:  # ada nama_jalan
+            if data[4]: 
                 headers = ["Nama", "Username", "Kata Sandi", "No Telp", "Jalan", "Desa", "Kecamatan", "Kabupaten"]
                 print(tabulate([data], headers=headers, tablefmt="fancy_grid"))
-            else:  # alamat belum diisi
+            else:  
                 headers = ["Nama", "Username", "Kata Sandi", "No Telp", "Alamat"]
                 row = [data[0], data[1], data[2], data[3], "Belum diisi"]
                 print(tabulate([row], headers=headers, tablefmt="fancy_grid"))
@@ -1904,7 +2004,6 @@ def lihat_biodata(id_pelanggan):
             conn.close()
         except:
             pass
-
     prompt_enter()
 
 def edit_biodata(id_pelanggan):
@@ -1936,7 +2035,7 @@ def edit_biodata(id_pelanggan):
             sandi = input(f"Kata Sandi ({data[2]}): ") or data[2]
             telp = input(f"No Telp ({data[3]}): ") or data[3]
 
-            if data[4]:  # alamat sudah ada
+            if data[4]: 
                 jalan = input(f"Nama Jalan ({data[5]}): ") or data[5]
                 desa = input(f"ID Desa ({data[6]} - {data[7]}): ") or data[6]
 
@@ -1944,7 +2043,7 @@ def edit_biodata(id_pelanggan):
                     UPDATE alamat SET nama_jalan = %s, id_desa = %s
                     WHERE id_alamat = %s
                 """, (jalan, desa, data[4]))
-            else:  # alamat belum ada
+            else: 
                 print("Alamat belum ada, silakan isi:")
                 jalan = input("Nama Jalan [Enter untuk batal]: ")
                 if jalan.strip() == "":
@@ -1966,7 +2065,6 @@ def edit_biodata(id_pelanggan):
                     WHERE id_pelanggan = %s
                 """, (id_alamat_baru, id_pelanggan))
 
-            # Konfirmasi sebelum update biodata
             print("\n--- Konfirmasi Data ---")
             print(f"Nama     : {nama}")
             print(f"Username : {user}")
@@ -2000,7 +2098,6 @@ def edit_biodata(id_pelanggan):
             conn.close()
         except:
             pass
-
     prompt_enter()
 
 def pilih_produk(id_pelanggan):
@@ -2013,7 +2110,6 @@ def pilih_produk(id_pelanggan):
         return
 
     try:
-        # Ambil status 'proses'
         cur.execute("SELECT id_status_transaksi FROM status_transaksi WHERE nama_status = 'proses'")
         s = cur.fetchone()
         if not s:
@@ -2021,7 +2117,6 @@ def pilih_produk(id_pelanggan):
             return
         id_status = s[0]
 
-        # Cari transaksi aktif
         cur.execute("""
             SELECT t.id_transaksi
             FROM transaksi t
@@ -2041,7 +2136,6 @@ def pilih_produk(id_pelanggan):
             id_transaksi = cur.fetchone()[0]
 
         while True:
-            # Tampilkan daftar produk
             cur.execute("""
                 SELECT p.id_produk, j.nama_jenis, p.stok, j.harga_produk, p.tgl_update_stok
                 FROM produk p
@@ -2073,7 +2167,6 @@ def pilih_produk(id_pelanggan):
                 print(Fore.RED + "Input harus angka!" + Style.RESET_ALL)
                 continue
 
-            # Cek stok
             cur.execute("SELECT stok FROM produk WHERE id_produk = %s", (id_produk,))
             row = cur.fetchone()
             if not row:
@@ -2085,7 +2178,6 @@ def pilih_produk(id_pelanggan):
                 print(Fore.RED + f"Stok tidak cukup. Stok tersedia: {stok_tersedia}" + Style.RESET_ALL)
                 continue
 
-            # Ambil harga produk
             cur.execute("""
                 SELECT j.harga_produk
                 FROM produk p
@@ -2099,7 +2191,6 @@ def pilih_produk(id_pelanggan):
             harga_satuan = row[0]
             total_harga = harga_satuan * quantity
 
-            # Konfirmasi sebelum insert
             print("\n--- Konfirmasi Produk ---")
             print(f"ID Produk   : {id_produk}")
             print(f"Jumlah      : {quantity}")
@@ -2110,13 +2201,11 @@ def pilih_produk(id_pelanggan):
                 print(Fore.YELLOW + "Produk batal ditambahkan." + Style.RESET_ALL)
                 continue
 
-            # Insert detail transaksi
             cur.execute("""
                 INSERT INTO detail_transaksi (id_transaksi, id_produk, quantity, harga)
                 VALUES (%s, %s, %s, %s)
             """, (id_transaksi, id_produk, quantity, total_harga))
 
-            # Update stok produk
             cur.execute("""
                 UPDATE produk
                 SET stok = stok - %s, tgl_update_stok = CURRENT_DATE
@@ -2141,7 +2230,6 @@ def pilih_produk(id_pelanggan):
             conn.close()
         except:
             pass
-
     prompt_enter()
 
 def lihat_keranjang(id_pelanggan):
@@ -2154,7 +2242,6 @@ def lihat_keranjang(id_pelanggan):
         return
 
     try:
-        # Ambil status 'proses'
         cur.execute("SELECT id_status_transaksi FROM status_transaksi WHERE nama_status = 'proses'")
         s = cur.fetchone()
         if not s:
@@ -2162,7 +2249,6 @@ def lihat_keranjang(id_pelanggan):
             return
         id_status = s[0]
 
-        # Cari transaksi aktif
         cur.execute("""
             SELECT id_transaksi, id_metode_pembayaran
             FROM transaksi
@@ -2178,7 +2264,6 @@ def lihat_keranjang(id_pelanggan):
 
         id_transaksi, id_metode = t
 
-        # Ambil detail keranjang
         cur.execute("""
             SELECT j.nama_jenis, d.quantity, d.harga
             FROM detail_transaksi d
@@ -2198,7 +2283,6 @@ def lihat_keranjang(id_pelanggan):
             total = sum([row[2] for row in items])
             print(Fore.GREEN + f"\nTotal Keranjang: Rp {total}" + Style.RESET_ALL)
 
-        # Tampilkan metode pembayaran
         if id_metode:
             cur.execute("""
                 SELECT id_metode_pembayaran, nama_transaksi 
@@ -2221,7 +2305,6 @@ def lihat_keranjang(id_pelanggan):
             conn.close()
         except:
             pass
-
     prompt_enter()
 
 def edit_keranjang(id_pelanggan):
@@ -2234,7 +2317,6 @@ def edit_keranjang(id_pelanggan):
         return
 
     try:
-        # Cari transaksi aktif dengan status 'proses'
         cur.execute("""
             SELECT t.id_transaksi
             FROM transaksi t
@@ -2251,7 +2333,6 @@ def edit_keranjang(id_pelanggan):
 
         id_transaksi = t[0]
 
-        # Ambil isi keranjang
         cur.execute("""
             SELECT d.id_detail_transaksi, j.nama_jenis, d.quantity, d.harga
             FROM detail_transaksi d
@@ -2309,7 +2390,6 @@ def edit_keranjang(id_pelanggan):
             harga_satuan = row[0]
             total_harga = harga_satuan * new_qty
 
-            # Konfirmasi sebelum update
             print("\n--- Konfirmasi Ubah ---")
             print(f"ID Detail : {id_detail}")
             print(f"Jumlah Baru: {new_qty}")
@@ -2328,7 +2408,6 @@ def edit_keranjang(id_pelanggan):
             print(Fore.GREEN + "Jumlah produk berhasil diubah." + Style.RESET_ALL)
 
         elif pilihan == "hapus":
-            # Konfirmasi sebelum hapus
             print("\n--- Konfirmasi Hapus ---")
             print(f"ID Detail : {id_detail}")
             konfirmasi = input("Apakah yakin ingin menghapus produk ini? (y/n): ").strip().lower()
@@ -2352,7 +2431,6 @@ def edit_keranjang(id_pelanggan):
             conn.close()
         except:
             pass
-
     prompt_enter()
 
 def pilih_metode_pembayaran(id_pelanggan):
@@ -2365,7 +2443,6 @@ def pilih_metode_pembayaran(id_pelanggan):
         return
 
     try:
-        # Ambil status 'proses'
         cur.execute("SELECT id_status_transaksi FROM status_transaksi WHERE nama_status = 'proses'")
         s = cur.fetchone()
         if not s:
@@ -2373,7 +2450,6 @@ def pilih_metode_pembayaran(id_pelanggan):
             return
         id_status = s[0]
 
-        # Cari transaksi aktif
         cur.execute("""
             SELECT id_transaksi
             FROM transaksi
@@ -2389,7 +2465,6 @@ def pilih_metode_pembayaran(id_pelanggan):
 
         id_transaksi = t[0]
 
-        # Ambil daftar metode pembayaran
         cur.execute("SELECT id_metode_pembayaran, nama_metode_pembayaran FROM metode_pembayaran")
         metode = cur.fetchall()
 
@@ -2417,7 +2492,6 @@ def pilih_metode_pembayaran(id_pelanggan):
             print(Fore.RED + "Metode pembayaran tidak valid." + Style.RESET_ALL)
             return
 
-        # Konfirmasi sebelum update
         print("\n--- Konfirmasi Metode Pembayaran ---")
         print(f"ID   : {cek[0]}")
         print(f"Nama : {cek[1]}")
@@ -2432,7 +2506,6 @@ def pilih_metode_pembayaran(id_pelanggan):
             WHERE id_transaksi = %s
         """, (pilihan, id_transaksi))
         conn.commit()
-
         print(Fore.GREEN + "Metode pembayaran berhasil dipilih." + Style.RESET_ALL)
 
     except Exception as e:
@@ -2444,7 +2517,6 @@ def pilih_metode_pembayaran(id_pelanggan):
             conn.close()
         except:
             pass
-
     prompt_enter()
 
 def edit_metode_pembayaran(id_pelanggan):
@@ -2500,21 +2572,18 @@ def edit_metode_pembayaran(id_pelanggan):
     """, (pilihan, id_transaksi))
     conn.commit()
     print("Metode pembayaran berhasil diganti untuk transaksi aktif.")
-
     cur.close(); conn.close()
     prompt_enter()
 
 def checkout(id_pelanggan):
     clear_screen()
     print(Fore.CYAN + "=== Checkout ===" + Style.RESET_ALL)
-
     conn, cur = connectDB()
     if not conn:
         prompt_enter()
         return
 
     try:
-        # Ambil status transaksi
         cur.execute("SELECT id_status_transaksi FROM status_transaksi WHERE nama_status = 'proses'")
         s = cur.fetchone()
         if not s:
@@ -2536,7 +2605,6 @@ def checkout(id_pelanggan):
             return
         id_status_batal = s[0]
 
-        # Cari transaksi aktif
         cur.execute("""
             SELECT id_transaksi FROM transaksi
             WHERE id_pelanggan = %s AND id_status_transaksi = %s
@@ -2548,7 +2616,6 @@ def checkout(id_pelanggan):
             return
         id_transaksi = transaksi[0]
 
-        # Ambil detail transaksi
         cur.execute("""
             SELECT d.id_produk, d.quantity, jp.harga_produk
             FROM detail_transaksi d
@@ -2563,7 +2630,6 @@ def checkout(id_pelanggan):
 
         total_belanja = sum(qty * harga for _, qty, harga in items)
 
-        # Konfirmasi sebelum checkout/batal
         print("\n--- Ringkasan Transaksi ---")
         print(f"ID Transaksi : {id_transaksi}")
         print(f"Jumlah Item  : {len(items)}")
@@ -2611,13 +2677,11 @@ def checkout(id_pelanggan):
             conn.close()
         except:
             pass
-
     prompt_enter()
 
 def lihat_riwayat_transaksi_pembelian(id_pelanggan):
     clear_screen()
     print(Fore.CYAN + "=== Riwayat Transaksi Pembelian ===" + Style.RESET_ALL)
-
     conn, cur = connectDB()
     if not conn:
         prompt_enter()
@@ -2655,7 +2719,6 @@ def lihat_riwayat_transaksi_pembelian(id_pelanggan):
             conn.close()
         except:
             pass
-
     prompt_enter()
 
 main()
